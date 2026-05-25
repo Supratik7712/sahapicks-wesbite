@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SahaPicks Admin | Product Management</title>
+<link rel="stylesheet" href="css/style.css">
+<script>
+    // Keep direct admin loads from flashing the panel before redirecting.
+    const adminParams = new URLSearchParams(window.location.search);
+    if (adminParams.get('access') !== '1') {
+        window.location.replace('./index.html');
+    } else {
+        document.documentElement.style.visibility = 'hidden';
+    }
+</script>
+</head>
+<body class="admin-body">
+
+<script>
+    // Admin Panel Password Protection
+    const ADMIN_PASSWORD = 'manish7712S@';
+    
+    // Check if user has already authenticated in this session
+    if (!sessionStorage.getItem('adminAuthenticated')) {
+        const password = prompt('🔒 Enter Admin Password:');
+        
+        if (password !== ADMIN_PASSWORD) {
+            alert('❌ Incorrect password! Redirecting...');
+            window.location.href = '/';
+        } else {
+            // Store authentication in session (lasts until browser closes)
+            sessionStorage.setItem('adminAuthenticated', 'true');
+        }
+    }
+
+    document.documentElement.style.visibility = 'visible';
+</script>
+
+<header class="admin-header">
+<div class="admin-header-content">
+<a href="./index.html" class="admin-logo">
+<img src="assets/images/logo.png" class="logo" alt="SahaPicks logo">
+<span>Admin</span>
+</a>
+
+<div class="admin-actions">
+<button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">☾</button>
+<a href="./index.html" class="btn btn-secondary btn-sm">Back to Store</a>
+</div>
+</div>
+</header>
+
+<div class="admin-container">
+<aside class="admin-sidebar">
+<nav class="admin-nav" aria-label="Admin navigation">
+<button class="admin-nav-item active" data-tab="products" aria-selected="true">
+<span>Products</span>
+</button>
+<button class="admin-nav-item" data-tab="add-product" aria-selected="false">
+<span>Add Product</span>
+</button>
+<button class="admin-nav-item" data-tab="import-export" aria-selected="false">
+<span>Backup</span>
+</button>
+</nav>
+</aside>
+
+<main class="admin-content">
+<div class="admin-tab active" id="products-tab">
+<div class="admin-section-header">
+<div>
+<span class="eyebrow admin-eyebrow">Store dashboard</span>
+<h1>Product Management</h1>
+<p>Review your electronics catalog, check clicks and keep your newest gadget deals ready.</p>
+</div>
+
+<div class="stats">
+<div class="stat-card">
+<span class="stat-label">Total Products</span>
+<span class="stat-value" id="totalProducts">0</span>
+</div>
+<div class="stat-card">
+<span class="stat-label">Total Clicks</span>
+<span class="stat-value" id="totalClicks">0</span>
+</div>
+</div>
+</div>
+
+<div class="products-table-wrapper">
+<table class="products-table">
+<thead>
+<tr>
+<th>Image</th>
+<th>Title</th>
+<th>Offer Price</th>
+<th>Original Price</th>
+<th>Tags</th>
+<th>Clicks</th>
+<th>Created</th>
+<th>Actions</th>
+</tr>
+</thead>
+<tbody id="productsTableBody">
+<tr class="empty-row">
+<td colspan="8">No products yet. <a href="#" class="add-first">Add your first product</a></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<div class="admin-tab" id="add-product-tab">
+<div class="admin-section-header">
+<div>
+<span class="eyebrow admin-eyebrow">Catalog editor</span>
+<h1 id="formTitle">Add New Product</h1>
+<p>Add a clear title, image, offer price, original price and affiliate link for the storefront.</p>
+</div>
+</div>
+
+<form class="product-form" id="productForm">
+<div class="form-grid">
+<div class="form-group form-group-full">
+<label for="productImageUrl">Paste Image Link</label>
+<div class="image-upload-area">
+<input type="url" id="productImageUrl" class="image-input" placeholder="Paste image link here">
+<div class="image-preview" id="imagePreview">
+<span class="upload-icon">Image</span>
+<span>Paste an image link to preview it here</span>
+</div>
+</div>
+<small>Paste a direct image link from your preferred image host.</small>
+</div>
+
+<div class="form-group">
+<label for="productTitle">Product Title *</label>
+<input type="text" id="productTitle" required placeholder="e.g., Premium Wireless Headphones">
+</div>
+
+<div class="form-group">
+<label for="productPrice">Offer Price (₹) *</label>
+<input type="number" id="productPrice" required step="0.01" min="0" placeholder="2499">
+</div>
+
+<div class="form-group">
+<label for="productOriginalPrice">Original Price (₹) *</label>
+<input type="number" id="productOriginalPrice" required step="0.01" min="0" placeholder="3999">
+</div>
+
+<div class="form-group form-group-full">
+<label for="productDescription">Description *</label>
+<textarea id="productDescription" required placeholder="Enter product description..." rows="4"></textarea>
+</div>
+
+<div class="form-group form-group-full">
+<label for="productAffiliateUrl">Affiliate Link *</label>
+<input type="url" id="productAffiliateUrl" required placeholder="https://amazon.com/...">
+</div>
+
+<div class="form-group form-group-full">
+<label for="productTags">Tags</label>
+<div class="tags-container">
+<label class="tag-checkbox">
+<input type="checkbox" value="new" class="tag-input">
+<span class="tag-label">New</span>
+</label>
+<label class="tag-checkbox">
+<input type="checkbox" value="hot-deal" class="tag-input">
+<span class="tag-label">Hot Deal</span>
+</label>
+<label class="tag-checkbox">
+<input type="checkbox" value="trending" class="tag-input">
+<span class="tag-label">Trending</span>
+</label>
+<label class="tag-checkbox">
+<input type="checkbox" value="mobiles" class="tag-input">
+<span class="tag-label">Mobiles</span>
+</label>
+<label class="tag-checkbox">
+<input type="checkbox" value="audio" class="tag-input">
+<span class="tag-label">Audio</span>
+</label>
+<label class="tag-checkbox">
+<input type="checkbox" value="laptops" class="tag-input">
+<span class="tag-label">Laptops & Desk Setup</span>
+</label>
+<label class="tag-checkbox">
+<input type="checkbox" value="wearables" class="tag-input">
+<span class="tag-label">Wearables</span>
+</label>
+<label class="tag-checkbox">
+<input type="checkbox" value="creator-gadgets" class="tag-input">
+<span class="tag-label">Content Creator Gadgets</span>
+</label>
+<label class="tag-checkbox">
+<input type="checkbox" value="budget-tech" class="tag-input">
+<span class="tag-label">Budget Tech Gadgets</span>
+</label>
+<label class="tag-checkbox">
+<input type="checkbox" value="accessories" class="tag-input">
+<span class="tag-label">Accessories</span>
+</label>
+<label class="tag-checkbox">
+<input type="checkbox" value="smart-home" class="tag-input">
+<span class="tag-label">Smart Home</span>
+</label>
+<label class="tag-checkbox">
+<input type="checkbox" value="gaming" class="tag-input">
+<span class="tag-label">Gaming</span>
+</label>
+</div>
+</div>
+
+<div class="form-actions form-group-full">
+<button type="submit" class="btn btn-primary">Save Product</button>
+<button type="button" class="btn btn-secondary" id="cancelBtn">Cancel</button>
+</div>
+</div>
+</form>
+</div>
+
+<div class="admin-tab" id="import-export-tab">
+<div class="admin-section-header">
+<div>
+<span class="eyebrow admin-eyebrow">Data tools</span>
+<h1>Backup & Restore</h1>
+<p>Export product data before big updates or import a previous catalog.</p>
+</div>
+</div>
+
+<div class="backup-section">
+<div class="backup-card">
+<h2>Export Products</h2>
+<p>Download all products as a JSON file for backup or migration.</p>
+<button class="btn btn-primary" id="exportBtn">Export as JSON</button>
+</div>
+
+<div class="backup-card">
+<h2>Import Products</h2>
+<p>Upload a JSON file to restore or import products.</p>
+<div class="file-upload-area">
+<input type="file" id="importFile" accept=".json" class="import-input">
+<div class="import-placeholder">
+<span class="upload-icon">JSON</span>
+<span>Click to select JSON file</span>
+</div>
+</div>
+<button class="btn btn-primary" id="importBtn" disabled>Import Products</button>
+</div>
+
+<div class="backup-card danger">
+<h2>Danger Zone</h2>
+<p>Delete all products. This cannot be undone.</p>
+<button class="btn btn-danger" id="clearAllBtn">Delete All Products</button>
+</div>
+</div>
+</div>
+</main>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<div class="modal" id="confirmModal">
+<div class="modal-content modal-sm">
+<h2 id="confirmTitle">Confirm Action</h2>
+<p id="confirmMessage"></p>
+<div class="modal-actions">
+<button class="btn btn-secondary" id="confirmCancel">Cancel</button>
+<button class="btn btn-danger" id="confirmDelete">Confirm</button>
+</div>
+</div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
+<script src="js/firebase.js"></script>
+<script src="js/storage.js"></script>
+<script src="js/products.js"></script>
+<script src="js/admin.js"></script>
+</body>
+</html>
