@@ -59,6 +59,7 @@ class AdminPanel {
 
         // Import/Export
         this.exportBtn = document.getElementById('exportBtn');
+        this.exportPdfBtn = document.getElementById('exportPdfBtn');
         this.importFile = document.getElementById('importFile');
         this.importPlaceholder = document.querySelector('.import-placeholder');
         this.importBtn = document.getElementById('importBtn');
@@ -94,6 +95,7 @@ class AdminPanel {
 
         // Import/Export
         this.exportBtn?.addEventListener('click', () => this.exportProducts());
+        this.exportPdfBtn?.addEventListener('click', () => this.exportProductsPdf());
         this.importFile?.addEventListener('change', (e) => this.handleImportFile(e));
         this.importPlaceholder?.addEventListener('click', () => this.importFile?.click());
         this.importPlaceholder?.addEventListener('dragover', (e) => e.preventDefault());
@@ -174,14 +176,14 @@ class AdminPanel {
             const discountText = discountPercent ? ` <small style="color:var(--green);">(${discountPercent}% off)</small>` : '';
 
             row.innerHTML = `
-                <td><img src="${this.escapeHTML(product.image)}" alt="${this.escapeHTML(product.title)}" class="table-image" onerror="this.style.display='none'"></td>
-                <td><strong>${this.escapeHTML(product.title)}</strong></td>
-                <td>${this.formatPrice(product.price || product.offerPrice || 0)}</td>
-                <td><span class="old-price">${product.originalPrice ? this.formatPrice(product.originalPrice) : '-'}</span>${discountText}</td>
-                <td><small>${this.escapeHTML(tagsText)}</small></td>
-                <td><span class="click-count">${clicks}</span></td>
-                <td><small>${date}</small></td>
-                <td>
+                <td data-label="Image"><img src="${this.escapeHTML(product.image)}" alt="${this.escapeHTML(product.title)}" class="table-image" onerror="this.style.display='none'"></td>
+                <td data-label="Title"><strong>${this.escapeHTML(product.title)}</strong></td>
+                <td data-label="Offer Price">${this.formatPrice(product.price || product.offerPrice || 0)}</td>
+                <td data-label="Original Price"><span class="old-price">${product.originalPrice ? this.formatPrice(product.originalPrice) : '-'}</span>${discountText}</td>
+                <td data-label="Tags"><small>${this.escapeHTML(tagsText)}</small></td>
+                <td data-label="Clicks"><span class="click-count">${clicks}</span></td>
+                <td data-label="Created"><small>${date}</small></td>
+                <td data-label="Actions">
                     <div class="table-actions">
                         <button class="icon-btn edit" data-product-id="${product.id}" title="Edit">Edit</button>
                         <button class="icon-btn delete" data-product-id="${product.id}" title="Delete">Del</button>
@@ -376,6 +378,274 @@ class AdminPanel {
         URL.revokeObjectURL(url);
 
         this.showToast('Products exported', 'success');
+    }
+
+    /**
+     * Export products as a PDF report
+     */
+    exportProductsPdf() {
+        const products = Products.sort(Products.getAll(), 'newest');
+        if (products.length === 0) {
+            this.showToast('No products to export', 'warning');
+            return;
+        }
+
+        const pdfBlob = this.buildProductsPdf(products);
+        const url = URL.createObjectURL(pdfBlob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `sahapicks-products-${Date.now()}.pdf`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+
+        this.showToast('Products exported as PDF', 'success');
+    }
+
+    /**
+     * Build a simple multi-page PDF report without extra dependencies.
+     */
+    buildProductsPdf(products) {
+        const pageWidth = 595.28;
+        const pageHeight = 841.89;
+        const margin = 40;
+        const headerSize = 16;
+        const bodySize = 10;
+        const headerLineHeight = 22;
+        const bodyLineHeight = 14;
+        const maxBodyWidth = 74;
+        const maxLinesPerPage = Math.floor((pageHeight - (margin * 2) - (headerLineHeight * 3) - 24) / bodyLineHeight);
+
+        const sanitize = (value) => this.sanitizePdfText(value);
+        const wrap = (value, limit = maxBodyWidth) => this.wrapPdfText(sanitize(value), limit);
+
+        const lines = [
+            `SahaPicks Product Export`,
+            `Generated: ${new Date().toLocaleString()}`,
+            `Total Products: ${products.length}`,
+            '',
+        ];
+
+        products.forEach((product, index) => {
+            const title = `${index + 1}. ${sanitize(product.title || 'Untitled Product')}`;
+            const price = `Price: ${this.formatPdfMoney(product.price || product.offerPrice || 0)}`;
+            const originalPrice = product.originalPrice ? `Original: ${this.formatPdfMoney(product.originalPrice)}` : 'Original: -';
+            const clicks = `Clicks: ${Number(product.clickCount || 0)}`;
+            const tags = `Tags: ${(product.tags || []).map((tag) => this.getBadgeText(tag)).join(', ') || 'None'}`;
+            const created = `Created: ${new Date(product.createdAt || Date.now()).toLocaleDateString()}`;
+            const link = `Link: ${sanitize(product.affiliateUrl || '-')}`;
+            const description = product.description ? wrap(`Description: ${product.description}`) : [];
+
+            lines.push(title);
+            lines.push(`${price} | ${originalPrice} | ${clicks}`);
+            lines.push(tags);
+            lines.push(created);
+            lines.push(link);
+            lines.push(...description);
+            lines.push('');
+        });
+
+        const pages = [];
+        const headerLines = [
+            'SahaPicks Product Export',
+            `Generated: ${new Date().toLocaleString()}`,
+            `Total Products: ${products.length}`,
+            '',
+        ];
+
+        let current = [];
+        let remainingLines = maxLinesPerPage;
+
+        const flushPage = () => {
+            if (!current.length) return;
+            pages.push([...headerLines, ...current]);
+            current = [];
+            remainingLines = maxLinesPerPage;
+        };
+
+        lines.slice(4).forEach((line) => {
+            const wrappedLines = line ? wrap(line) : [''];
+            if (wrappedLines.length > remainingLines) {
+                flushPage();
+            }
+            current.push(...wrappedLines);
+            remainingLines -= wrappedLines.length;
+            if (remainingLines <= 0) {
+                flushPage();
+            }
+        });
+
+        flushPage();
+
+        const objects = [];
+        const pageObjectNumbers = [];
+
+        for (let i = 0; i < pages.length; i += 1) {
+            const pageObjectNumber = 4 + (i * 2);
+            const contentObjectNumber = pageObjectNumber + 1;
+            pageObjectNumbers.push(pageObjectNumber);
+
+            const pageLines = pages[i];
+            const content = this.createPdfPageContent(pageLines, {
+                pageWidth,
+                pageHeight,
+                margin,
+                headerSize,
+                bodySize,
+                headerLineHeight,
+                bodyLineHeight,
+            });
+
+            objects.push({
+                number: pageObjectNumber,
+                body: `<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ${pageWidth} ${pageHeight}] /Resources << /Font << /F1 3 0 R >> >> /Contents ${contentObjectNumber} 0 R >>`,
+            });
+            objects.push({
+                number: contentObjectNumber,
+                body: `<< /Length ${content.length} >>\nstream\n${content}\nendstream`,
+            });
+        }
+
+        const pdfObjects = [
+            { number: 1, body: '<< /Type /Catalog /Pages 2 0 R >>' },
+            { number: 2, body: `<< /Type /Pages /Kids [${pageObjectNumbers.map((num) => `${num} 0 R`).join(' ')}] /Count ${pages.length} >>` },
+            { number: 3, body: '<< /Type /Font /Subtype /Type1 /BaseFont /Courier >>' },
+            ...objects,
+        ];
+
+        let pdf = '%PDF-1.4\n';
+        const offsets = ['0000000000 65535 f \n'];
+
+        pdfObjects.forEach((object) => {
+            offsets.push(this.padPdfOffset(pdf.length));
+            pdf += `${object.number} 0 obj\n${object.body}\nendobj\n`;
+        });
+
+        const xrefStart = pdf.length;
+        pdf += `xref\n0 ${pdfObjects.length + 1}\n`;
+        pdf += offsets.join('');
+        pdf += `trailer\n<< /Size ${pdfObjects.length + 1} /Root 1 0 R >>\n`;
+        pdf += `startxref\n${xrefStart}\n%%EOF`;
+
+        return new Blob([pdf], { type: 'application/pdf' });
+    }
+
+    /**
+     * Create the text stream for a single PDF page.
+     */
+    createPdfPageContent(lines, config) {
+        const {
+            pageHeight,
+            margin,
+            headerSize,
+            bodySize,
+            headerLineHeight,
+            bodyLineHeight,
+        } = config;
+
+        const content = [];
+        let cursorY = pageHeight - margin;
+
+        const addLine = (text, size, lineHeight) => {
+            const safeText = this.escapePdfText(text);
+            const nextY = cursorY - lineHeight;
+            content.push(`BT /F1 ${size} Tf 1 0 0 1 ${margin} ${nextY} Tm (${safeText}) Tj ET`);
+            cursorY = nextY;
+        };
+
+        addLine(lines[0] || 'SahaPicks Product Export', headerSize, headerLineHeight);
+        addLine(lines[1] || '', bodySize, bodyLineHeight);
+        addLine(lines[2] || '', bodySize, bodyLineHeight);
+        cursorY -= 6;
+
+        for (let i = 3; i < lines.length; i += 1) {
+            const line = lines[i];
+            if (line === '') {
+                cursorY -= bodyLineHeight;
+                continue;
+            }
+            const wrapped = this.wrapPdfText(this.sanitizePdfText(line), 74);
+            wrapped.forEach((wrappedLine) => addLine(wrappedLine, bodySize, bodyLineHeight));
+        }
+
+        return content.join('\n');
+    }
+
+    /**
+     * Wrap plain text for Courier-based PDF rendering.
+     */
+    wrapPdfText(text, limit = 74) {
+        const words = String(text || '').split(/\s+/).filter(Boolean);
+        if (!words.length) {
+            return [''];
+        }
+
+        const lines = [];
+        let current = '';
+
+        words.forEach((word) => {
+            const next = current ? `${current} ${word}` : word;
+            if (next.length > limit) {
+                if (current) {
+                    lines.push(current);
+                }
+                if (word.length > limit) {
+                    for (let i = 0; i < word.length; i += limit) {
+                        lines.push(word.slice(i, i + limit));
+                    }
+                    current = '';
+                } else {
+                    current = word;
+                }
+            } else {
+                current = next;
+            }
+        });
+
+        if (current) {
+            lines.push(current);
+        }
+
+        return lines.length ? lines : [''];
+    }
+
+    /**
+     * Convert text to PDF-safe ASCII.
+     */
+    sanitizePdfText(text) {
+        return String(text ?? '')
+            .replace(/[\u2018\u2019]/g, "'")
+            .replace(/[\u201C\u201D]/g, '"')
+            .replace(/[^\x20-\x7E]/g, '?');
+    }
+
+    /**
+     * Escape PDF text string characters.
+     */
+    escapePdfText(text) {
+        return String(text)
+            .replace(/\\/g, '\\\\')
+            .replace(/\(/g, '\\(')
+            .replace(/\)/g, '\\)');
+    }
+
+    /**
+     * Pad a PDF byte offset for the xref table.
+     */
+    padPdfOffset(offset) {
+        return `${String(offset).padStart(10, '0')} 00000 n \n`;
+    }
+
+    /**
+     * Format currency for PDF output.
+     */
+    formatPdfMoney(value) {
+        const amount = Number.parseFloat(value || 0);
+        return `Rs. ${Number.isFinite(amount) ? amount.toLocaleString('en-IN', {
+            maximumFractionDigits: 2,
+            minimumFractionDigits: amount % 1 === 0 ? 0 : 2,
+        }) : '0'}`;
     }
 
     /**
