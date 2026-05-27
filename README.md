@@ -1,8 +1,8 @@
 # 🛍️ SahaPicks Website
 
-SahaPicks is a modern and responsive product showcase website built to display curated picks, featured products, recommendations, and collections in a clean and visually appealing interface.
+SahaPicks is a modern affiliate product discovery platform designed to help users explore curated products and seamlessly redirect to trusted ecommerce partners for purchasing.
 
-The project is designed with performance, responsiveness, and simplicity in mind, making it suitable for affiliate marketing, product discovery, ecommerce showcases, and personal branding.
+The platform focuses on clean UI/UX, responsive design, affiliate conversion optimization, and scalable deployment architecture.
 
 ---
 
@@ -10,84 +10,166 @@ The project is designed with performance, responsiveness, and simplicity in mind
 
 🔗 https://sahapicks.online/
 
-> Custom domain purchased from Hostinger and deployed using Netlify connected with GitHub.
+> Domain purchased via Hostinger and connected to Netlify hosting for fast global delivery.
 
 ---
 
-# 📖 Project Overview
+# 🚀 USP & Value Proposition
 
-SahaPicks is a frontend web application focused on presenting curated products and collections with a modern UI/UX experience.
+SahaPicks simplifies product discovery by combining curated recommendations with fast affiliate redirection workflows.
 
-The website aims to provide:
+## Why Users Use SahaPicks
 
-- Responsive design across all devices
-- Fast and optimized performance
-- Easy navigation
-- Clean product presentation
-- Scalable frontend structure
-- Professional modern interface
-
-This project can be adapted for:
-
-- Affiliate product websites
-- Ecommerce showcase platforms
-- Product recommendation websites
-- Personal storefronts
-- Startup landing pages
-- Curated collection websites
+- 🛒 Discover curated and trending products
+- ⚡ Seamless “Buy Now” affiliate redirection
+- 📱 Mobile-first responsive experience
+- 🎯 Optimized product showcase funnel
+- 🔗 Direct checkout on trusted ecommerce partner platforms
+- 💡 Fast-loading lightweight frontend
 
 ---
 
-# ✨ Features
+# 🔄 Affiliate Funnel Workflow
 
-## 🎨 Modern UI Design
-- Clean and minimal interface
-- Attractive product layouts
-- Responsive card-based sections
-- User-friendly structure
+```text
+Product Discovery
+        ↓
+Product Recommendation Display
+        ↓
+Affiliate Link Generation / Tracking
+        ↓
+Buy Now Redirect
+        ↓
+Checkout on Partner Ecommerce Platform
+```
 
-## 📱 Fully Responsive
-- Mobile optimized
-- Tablet responsive
-- Desktop compatible
+The website acts as a discovery and referral layer rather than directly processing payments or storing customer payment information.
 
-## ⚡ Performance Optimized
-- Fast page loading
-- Optimized frontend assets
-- Lightweight structure
+---
 
-## 🛒 Product Showcase
-- Featured product sections
-- Recommendation layouts
-- Organized collections
-- Product display cards
+# ✨ Core Features
 
-## 🔍 Navigation
-- Smooth user experience
-- Structured sections
-- Easy browsing interface
+- Responsive modern UI
+- Curated product collections
+- Affiliate “Buy Now” redirection system
+- Firebase-powered product management
+- Newsletter subscription integration
+- Lightweight optimized frontend
+- Fast Netlify deployment pipeline
+- Custom domain integration via Hostinger
 
 ---
 
 # 🛠️ Tech Stack
 
 ## Frontend
+
 - HTML5
 - CSS3
 - JavaScript
 
-## Frameworks & Tools
-(Add only the ones used in your project)
+### Frontend Architecture
+- Responsive component-based structure
+- Vanilla JavaScript / framework-based implementation (depending on project setup)
+- Optimized asset loading
+- Mobile-first UI approach
 
-- React.js
-- Vite
-- Tailwind CSS
-- Bootstrap
+---
 
-## Deployment & Hosting
-- GitHub (Version Control)
-- Netlify (Free Hosting & Deployment)
-- Hostinger (Custom Domain Provider)
+# ☁️ Backend & Storage
+
+## Firebase Services
+
+Firebase is used for:
+
+- Product data storage
+- Image asset hosting
+- Database management
+- Optional authentication handling
+
+### Firebase Components
+- Firestore Database
+- Firebase Storage
+- Firebase Hosting utilities (optional)
+
+### Security Rules
+Firebase security rules should restrict:
+- Unauthorized write access
+- Public modification of product data
+- Access to sensitive admin operations
+
+> Secrets, API keys, and credentials are never stored directly inside the repository.
+
+---
+
+# 🌍 Hosting & Deployment
+
+## Netlify Hosting
+
+The application is deployed using Netlify for:
+
+- Global CDN delivery
+- Continuous deployment
+- HTTPS support
+- Fast static hosting
+- GitHub-based auto deployments
+
+---
+
+# 🌐 Domain & DNS Setup
+
+## Domain Provider
+- Hostinger
+
+## Hosting Provider
+- Netlify
+
+### DNS Workflow
+
+```text
+Hostinger Domain
+        ↓
+DNS Configuration
+        ↓
+Netlify Nameservers / DNS Records
+        ↓
+Website Hosted on Netlify CDN
+```
+
+### DNS Configuration Includes
+- A records
+- CNAME records
+- SSL provisioning
+- DNS propagation handling
+
+### DNS Propagation
+DNS changes may take:
+- Few minutes to 24 hours globally
+
+---
+
+# 🔌 Integrations
+
+## Formspree
+Used for:
+- Newsletter subscriptions
+- Contact forms
+- Lead capture workflows
+
+## Development Tools
+
+### ChatGPT
+Used for:
+- Base Code development 
+- Documentation assistance
+- UI/UX ideation
+- Code optimization guidance
+
+### GitHub Copilot
+Used for:
+- Code suggestions
+- Faster development workflows
+- Refactoring assistance
 
 ---
 
@@ -98,186 +180,327 @@ sahapicks-wesbite/
 │
 ├── public/
 │
+├── screenshots/
+│
 ├── src/
 │   ├── assets/
-│   │   ├── images/
-│   │   ├── icons/
-│   │   └── fonts/
-│   │
 │   ├── components/
-│   │   ├── Navbar/
-│   │   ├── Footer/
-│   │   ├── ProductCard/
-│   │   ├── HeroSection/
-│   │   └── FeaturedSection/
-│   │
 │   ├── pages/
-│   │   ├── Home/
-│   │   ├── Products/
-│   │   └── About/
-│   │
+│   ├── services/
+│   ├── firebase/
 │   ├── styles/
-│   │
-│   ├── App.js
-│   └── main.js
+│   └── utils/
 │
+├── .env.example
 ├── package.json
 ├── vite.config.js
 ├── README.md
 └── .gitignore
+```
 
-⚙️ Local Development Setup
+---
 
-Follow these steps to run the project locally.
+# ⚙️ Local Development Setup
 
-1️⃣ Clone Repository
+## 1️⃣ Clone Repository
+
+```bash
 git clone https://github.com/Supratik7712/sahapicks-wesbite.git
-2️⃣ Open Project Folder
+```
+
+---
+
+## 2️⃣ Navigate Into Project
+
+```bash
 cd sahapicks-wesbite
-3️⃣ Install Dependencies
+```
+
+---
+
+## 3️⃣ Install Dependencies
+
+```bash
 npm install
-4️⃣ Start Development Server
+```
+
+---
+
+## 4️⃣ Configure Environment Variables
+
+Create a `.env` file:
+
+```env
+VITE_FIREBASE_API_KEY=your_key
+VITE_FIREBASE_AUTH_DOMAIN=your_domain
+VITE_FIREBASE_PROJECT_ID=your_project_id
+VITE_FORMSPREE_ENDPOINT=your_formspree_endpoint
+```
+
+> Never commit `.env` files or secrets to GitHub.
+
+---
+
+## 5️⃣ Start Development Server
+
+```bash
 npm run dev
-5️⃣ Open In Browser
+```
+
+---
+
+## 6️⃣ Open In Browser
+
+```bash
 http://localhost:5173
-🚀 Deployment Setup
+```
 
-This project uses:
+---
 
-GitHub for source control
-Netlify for free hosting
-Hostinger for custom domain management
-🌍 Deployment Workflow
-🔹 GitHub Integration
+# 🚀 Deployment Workflow
 
-The source code is maintained on GitHub.
+## GitHub → Netlify CI/CD
 
-Whenever new changes are pushed:
+Whenever code is pushed to GitHub:
 
+```bash
 git add .
 git commit -m "Updated project"
 git push origin main
+```
 
-Netlify automatically detects updates and redeploys the website.
+Netlify automatically:
+- Detects changes
+- Builds the project
+- Deploys the latest version
 
-☁️ Netlify Deployment
-Step 1 — Connect GitHub Repository
-Login to Netlify
-Select:
-Add New Site
-Import Existing Project
-Connect GitHub repository
-Step 2 — Build Settings
+---
 
-Use the following settings:
+# ☁️ Netlify Deployment Setup
 
-Build Command
+## Build Command
+
+```bash
 npm run build
-Publish Directory
+```
+
+## Publish Directory
+
+```bash
 dist
-Step 3 — Deploy Website
+```
 
-Netlify automatically builds and deploys the project.
+---
 
-🌐 Custom Domain Setup (Hostinger + Netlify)
+# 🌐 Connecting Hostinger Domain To Netlify
 
-The domain is purchased from Hostinger and connected to Netlify hosting.
+## Step 1 — Add Domain In Netlify
 
-Domain Connection Process
-1️⃣ Add Custom Domain In Netlify
-Open:
-Site Settings → Domain Management
-Add your purchased domain
+- Site Settings
+- Domain Management
+- Add Custom Domain
+
+---
+
+## Step 2 — Configure DNS In Hostinger
+
+Add records provided by Netlify.
+
+Typical configuration:
+
+### A Record
+
+```text
+75.2.60.5
+```
+
+### CNAME Record
+
+```text
+your-site.netlify.app
+```
+
+---
+
+## Step 3 — SSL Provisioning
+
+Netlify automatically provisions:
+- HTTPS
+- SSL certificates
+- Secure CDN delivery
+
+---
+
+# 📧 Formspree Integration
+
+## Setup Workflow
+
+1. Create Formspree account
+2. Create newsletter form
+3. Copy generated endpoint
+4. Add endpoint to frontend form action
 
 Example:
-yourdomain.com
-2️⃣ Update DNS Records In Hostinger
 
-Inside Hostinger DNS settings:
+```html
+<form action="https://formspree.io/f/your-id" method="POST">
+```
 
-Add the required records provided by Netlify.
+---
 
-Typically:
+# 🔄 Data Flow Architecture
 
-A Record
-75.2.60.5
-CNAME Record
-your-netlify-subdomain.netlify.app
+## Product Data Flow
 
-Actual DNS values may vary depending on Netlify configuration.
+```text
+Admin/Product Source
+        ↓
+Firebase Firestore
+        ↓
+Frontend Fetches Product Data
+        ↓
+Products Rendered On Website
+        ↓
+Affiliate Link Redirect Triggered
+```
 
-3️⃣ Enable HTTPS
+---
 
-Netlify automatically provisions SSL certificates using Let's Encrypt.
+# 🔗 Affiliate Link Flow
 
-🔒 Security Notes
+```text
+User Clicks Buy Now
+        ↓
+Affiliate URL Loaded
+        ↓
+Referral Parameters Attached
+        ↓
+Redirect To Ecommerce Platform
+```
 
-For security reasons, the following are intentionally NOT included in this repository:
+---
 
-API keys
-Secret environment variables
-Authentication credentials
-Netlify account information
-Hostinger account details
-Deployment tokens
-Private configuration files
+# 🔒 Security & Privacy
 
-Sensitive information should always be stored using environment variables or secure dashboard settings.
+## Security Practices
 
-📈 Future Improvements
-Planned updates for future versions:
+- Environment variables hidden
+- Firebase rules configured
+- No payment processing handled locally
+- Sensitive credentials excluded from repository
+- HTTPS enabled via Netlify SSL
 
-🔐 Authentication system
-❤️ Wishlist functionality
-🛒 Shopping cart
-🔍 Product search and filtering
-💳 Payment gateway integration
-🌙 Dark mode support
-📊 Admin dashboard
-🌐 Backend API integration
+## User Data Handling
 
-🤝 Contributing
+Newsletter/contact form submissions:
+- Processed through Formspree
+- Not publicly exposed
+- Not stored directly in frontend code.
+
+# 📋 First Run Checklist
+
+## ✅ Before Running
+
+- Install Node.js
+- Configure Firebase project
+- Configure Formspree endpoint
+- Create `.env` file
+- Install dependencies
+
+---
+
+# 🔧 Available Scripts
+
+## Development
+
+```bash
+npm run dev
+```
+
+## Production Build
+
+```bash
+npm run build
+```
+
+## Preview Build
+
+```bash
+npm run preview
+```
+
+---
+
+# ⚠️ Known Limitations
+
+- No direct payment gateway integration
+- Affiliate conversion depends on partner platforms
+- Firebase free tier limitations may apply
+- DNS propagation delays may occur during setup
+
+---
+
+# 📈 Future Improvements
+
+Planned upgrades include:
+
+- Advanced affiliate analytics
+- AI-powered recommendations
+- Authentication system
+- Wishlist functionality.
+
+# 🤝 Contributing
+
 Contributions are welcome.
 
-🐛 Reporting Issues
+# 🐛 Support & Issues
 
-If you find any bugs or problems, feel free to open an issue in the repository.
+For bugs, issues, or suggestions:
 
-📄 License
+- Open a GitHub issue
+- Contact project maintainer
+
+---
+
+# 👨‍💻 Author
+
+## Supratik Saha
+
+### GitHub
+https://github.com/Supratik7712
+
+### Website
+https://sahapicks.online/
+
+---
+
+# 📄 License
 
 This project is licensed under the MIT License.
 
-👨‍💻 Author
-Supratik Saha
-GitHub
+---
+# ⭐ For any query contact
+--- supratiksaha2022s@gmail.com
 
-https://github.com/Supratik7712
+# ⭐ Support The Project
 
-Website
-https://sahapicks.online/
+If you found this project useful:
 
-⭐ Support The Project
-If you like this project:
+- ⭐ Star the repository
+- 🍴 Fork the project
+- 📢 Share the project
 
-⭐ Star the repository
-🍴 Fork the project
-📢 Share it with others
-🙌 Acknowledgements
+---
+
+# 🙌 Acknowledgements
 
 Special thanks to:
 
-Open-source community
-Frontend development resources
-Netlify hosting platform
-GitHub platform
-Hostinger domain services.
-
-📬 Contact
-
-For collaborations or project-related inquiries:
-
-📧 supratiksaha2022s@gmail.com
-
-🔗 Repository
-
-https://github.com/Supratik7712/sahapicks-wesbite
+- Netlify
+- Firebase
+- Hostinger
+- Formspree
+- GitHub
+- Open-source community
+- ChatGPT
+- GitHub Copilot.
