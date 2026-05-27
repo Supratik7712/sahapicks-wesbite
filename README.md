@@ -226,11 +226,6 @@ Sensitive information should always be stored using environment variables or sec
 
 📸 Screenshots
 
-<img width="1408" height="881" alt="5E9DF2CE-7978-43A7-9358-4A675EDA6B3C" src="https://github.com/user-attachments/assets/709723aa-c10c-403e-8200-b3ffae17761a" />
-
-<img width="1408" height="881" alt="5E9AF72C-F6A4-4424-8DDF-4114BFA167FA" src="https://github.com/user-attachments/assets/beb38ab9-4689-42f3-b167-8404dcc21600" />
-<img width="1408" height="881" alt="6A9C94F0-365C-4753-9FCE-662B02F706F2" src="https://github.com/user-attachments/assets/252038a5-8d55-4330-b161-daac94c33bc3" />
-
 
 🏠 Homepage
 /screenshots/homepage.png
