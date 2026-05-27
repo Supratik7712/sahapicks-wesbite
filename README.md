@@ -180,7 +180,6 @@ sahapicks-wesbite/
 │
 ├── public/
 │
-├── screenshots/
 │
 ├── src/
 │   ├── assets/
